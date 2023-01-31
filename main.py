@@ -27,7 +27,7 @@ class App(customtkinter.CTk):
         customtkinter.set_default_color_theme("blue")
 
         # Creating a 2x5 grid.
-        self.grid_rowconfigure((0, 1, 2, 3, 4), weight=1)
+        self.grid_rowconfigure([0, 1, 2, 3, 4], weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         # Thumbnail of link.
@@ -56,15 +56,15 @@ class App(customtkinter.CTk):
         # Progress percentage
         self.progressBar = customtkinter.CTkProgressBar(self, height=10, width=500)
         self.progressBar.set(0)
-        self.progressBar.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
+        self.progressBar.grid(row=4, column=0, columnspan=2, padx=10, pady=10, sticky="ew")
 
     # Get YouTube video information.
     def info(self):
         try:
             # Calling YouTube information.
             self.ytLink = self.link.get()
-            self.ytObject = YouTube(self.ytLink)
-            # Changes title to youtube video.
+            self.ytObject = YouTube(self.ytLink, on_progress_callback=self.on_progress)
+            # Changes title to YouTube video.
             self.text.configure(text=self.ytObject.title)
             # Changes thumbnail to YouTube video thumbnail.
             self.downloadedThumbnail = customtkinter.CTkImage(Image.open(requests.get(self.ytObject.thumbnail_url, stream=True).raw), size=(192, 144))
@@ -89,14 +89,19 @@ class App(customtkinter.CTk):
         except:
             self.button.configure(text="Invalid Link.", text_color="red")
 
+    # This is how the progress bar completion gets calculated.
     def on_progress(self, stream, chunk, bytes_remaining):
+        # Total size of the video.
         total_size = stream.filesize
+        # Number of bytes downloaded.
         bytes_downloaded = total_size - bytes_remaining
+        # Decimal point between 0 and 1 that we set to the progressBar variable.
         percentage_of_completion = bytes_downloaded / total_size * 100
-        per = str(int(percentage_of_completion))
+        per = round((float(percentage_of_completion) / 100), 2)
 
         # Updating progress bar
-        self.progressBar.set(float(percentage_of_completion) / 100)
+        self.progressBar.set(per)
+        self.progressBar.update()
 
 if __name__ == "__main__":
     app = App()
