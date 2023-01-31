@@ -33,7 +33,7 @@ class App(customtkinter.CTk):
         # Thumbnail of link.
         self.thumbnailImage = customtkinter.CTkImage(Image.open("images/thumbnail.png"), size=(192, 144))
         self.thumbnail = customtkinter.CTkLabel(self, text="", image=self.thumbnailImage, bg_color="white")
-        self.thumbnail.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+        self.thumbnail.grid(row=0, column=0, columnspan=2)
 
         # Text bard on the app.
         self.text = customtkinter.CTkLabel(self, text="Insert a youtube video url link.", bg_color="black")
@@ -45,13 +45,13 @@ class App(customtkinter.CTk):
         self.link.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 
         # Main button.
-        self.button = customtkinter.CTkButton(self, text="Select Video", command=self.info, height=40, width=200, bg_color="white")
-        self.button.grid(row=3, column=0, padx=10, pady=10)
+        self.button = customtkinter.CTkButton(self, text="Select Video", command=self.info, height=40, width=250, bg_color="white")
+        self.button.grid(row=3, column=0, padx=10)
 
         # Download location button.
         self.directoryImage = customtkinter.CTkImage(Image.open("images/folder.png"), size=(30, 30))
-        self.locationButton = customtkinter.CTkButton(self, text="", image=self.directoryImage, command=self.downloadLocation, height=30, width=30, bg_color="white")
-        self.locationButton.grid(row=3, column=1, padx=10, pady=10)
+        self.locationButton = customtkinter.CTkButton(self, text="", image=self.directoryImage, command=self.downloadLocation, height=30, width=40, bg_color="white")
+        self.locationButton.grid(row=3, column=1, padx=10)
 
         # Progress percentage
         self.progressBar = customtkinter.CTkProgressBar(self, height=10, width=500)
@@ -65,7 +65,7 @@ class App(customtkinter.CTk):
             self.ytLink = self.link.get()
             self.ytObject = YouTube(self.ytLink)
             # Changes title to youtube video.
-            self.title.configure(text=self.ytObject.title)
+            self.text.configure(text=self.ytObject.title)
             # Changes thumbnail to YouTube video thumbnail.
             self.downloadedThumbnail = customtkinter.CTkImage(Image.open(requests.get(self.ytObject.thumbnail_url, stream=True).raw), size=(192, 144))
             self.thumbnail.configure(image=self.downloadedThumbnail)
